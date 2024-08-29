@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerOutageManagement", "PowerOutageManagement\PowerOutageManagement.csproj", "{8E2ABA68-4F41-435A-9A0B-A215146F9351}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{48F97273-78B9-4B69-BC9F-D6AC851746A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerOutageService", "PowerOutageService\PowerOutageService.csproj", "{24559B51-AD4A-46AE-A50B-A2D2AE131C5D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{80E0680E-9220-43DE-9C5E-0B2C79363151}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +12,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8E2ABA68-4F41-435A-9A0B-A215146F9351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E2ABA68-4F41-435A-9A0B-A215146F9351}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E2ABA68-4F41-435A-9A0B-A215146F9351}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E2ABA68-4F41-435A-9A0B-A215146F9351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24559B51-AD4A-46AE-A50B-A2D2AE131C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24559B51-AD4A-46AE-A50B-A2D2AE131C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24559B51-AD4A-46AE-A50B-A2D2AE131C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24559B51-AD4A-46AE-A50B-A2D2AE131C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{24559B51-AD4A-46AE-A50B-A2D2AE131C5D} = {48F97273-78B9-4B69-BC9F-D6AC851746A6}
 	EndGlobalSection
 EndGlobal
