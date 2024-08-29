@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=YourStrong!Passw0rd
+      - POSTGRES_DB=PowerOutageDB
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  power-outage-api:
+    build:
+      context: .
+      dockerfile: backend/PowerOutageService/Dockerfile
+    container_name: power-outage-api
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=PowerOutageDB;Username=postgres;Password=YourStrong!Passw0rd;
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+  power-outage-frontend:
+    build:
+      context: ./frontend/power-outage-app 
+      dockerfile: src/Dockerfile
+    container_name: power-outage-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - power-outage-api
+    networks:
+      - backend
+
+  ef:
+    build:
+      context: .
+      dockerfile: backend/PowerOutageService/Dockerfile
+      target: efcore
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=PowerOutageDB;Username=postgres;Password=YourStrong!Passw0rd;
+    networks:
+      - backend
+    entrypoint: ["sh", "-c", "until pg_isready -h postgres -p 5432; do echo waiting for postgres; sleep 2; done; dotnet ef database update"]
+
+volumes:
+  postgres-data:
+
+networks:
+  backend:
+    driver: bridge
