@@ -15,45 +15,53 @@ namespace PowerOutageService
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuring Group Entity
+            // Configure Group Entity
             modelBuilder.Entity<Group>(entity =>
             {
                 entity.ToTable("Groups");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired();
-                entity.Property(e => e.Description).IsRequired();
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(250);
             });
 
-            // Configuring Address Entity
+            // Configure Address Entity
             modelBuilder.Entity<Address>(entity =>
             {
                 entity.ToTable("Addresses");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.AddressText).IsRequired();
+                entity.Property(e => e.AddressName)
+                    .IsRequired()
+                    .HasMaxLength(200);
                 entity.HasIndex(e => e.GroupId).HasDatabaseName("IX_Addresses_GroupId");
 
-                // Define Foreign Key Constraint
+                // Foreign Key Constraint
                 entity.HasOne<Group>()
                     .WithMany()
                     .HasForeignKey(e => e.GroupId)
-                    .OnDelete(DeleteBehavior.Restrict); // or you can choose Cascade depending on your use case
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // Configuring Schedule Entity
+            // Configure Schedule Entity
             modelBuilder.Entity<Schedule>(entity =>
             {
                 entity.ToTable("Schedules");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Day).IsRequired();
+                entity.Property(e => e.Day)
+                    .IsRequired()
+                    .HasMaxLength(50);
                 entity.Property(e => e.StartTime).IsRequired();
                 entity.Property(e => e.FinishTime).IsRequired();
                 entity.HasIndex(e => e.GroupId).HasDatabaseName("IX_Schedules_GroupId");
 
-                // Define Foreign Key Constraint
+                // Foreign Key Constraint
                 entity.HasOne<Group>()
                     .WithMany()
                     .HasForeignKey(e => e.GroupId)
-                    .OnDelete(DeleteBehavior.Restrict); // or Cascade depending on your use case
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }

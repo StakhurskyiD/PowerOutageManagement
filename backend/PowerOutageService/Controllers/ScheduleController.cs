@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using PowerOutageService.Enteties;
+using PowerOutageService.Services.Contracts;
 
 namespace PowerOutageService.Controllers
 {
@@ -8,26 +11,26 @@ namespace PowerOutageService.Controllers
     [ApiController]
     public class ScheduleController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IScheduleService _scheduleService;
 
-        public ScheduleController(AppDbContext context)
+        public ScheduleController(IScheduleService scheduleService)
         {
-            _context = context;
+            _scheduleService = scheduleService;
         }
 
         // GET: api/Schedule
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedules()
         {
-            var schedules = await _context.Schedules.ToListAsync();
+            var schedules = await _scheduleService.GetAllAsync();
             return Ok(schedules);
         }
 
-        // GET: api/Schedule/5
+        // GET: api/Schedule/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Schedule>> GetSchedule(int id)
+        public async Task<ActionResult<Schedule>> GetSchedule(Guid id)
         {
-            var schedule = await _context.Schedules.FindAsync(id);
+            var schedule = await _scheduleService.GetByIdAsync(id);
 
             if (schedule == null)
             {
@@ -46,54 +49,37 @@ namespace PowerOutageService.Controllers
                 return BadRequest("Schedule is null.");
             }
 
-            _context.Schedules.Add(schedule);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetSchedule), new { id = schedule.Id }, schedule);
+            var createdSchedule = await _scheduleService.CreateAsync(schedule);
+            return CreatedAtAction(nameof(GetSchedule), new { id = createdSchedule.Id }, createdSchedule);
         }
 
-        // PUT: api/Schedule/5
+        // PUT: api/Schedule/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSchedule(int id, [FromBody] Schedule schedule)
+        public async Task<IActionResult> UpdateSchedule(Guid id, [FromBody] Schedule schedule)
         {
             if (id != schedule.Id)
             {
                 return BadRequest("Schedule ID mismatch.");
             }
 
-            _context.Entry(schedule).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Schedules.Any(s => s.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/Schedule/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSchedule(int id)
-        {
-            var schedule = await _context.Schedules.FindAsync(id);
-            if (schedule == null)
+            var updatedSchedule = await _scheduleService.UpdateAsync(id, schedule);
+            if (updatedSchedule == null)
             {
                 return NotFound();
             }
 
-            _context.Schedules.Remove(schedule);
-            await _context.SaveChangesAsync();
+            return Ok(updatedSchedule);
+        }
+
+        // DELETE: api/Schedule/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSchedule(Guid id)
+        {
+            var success = await _scheduleService.DeleteAsync(id);
+            if (!success)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

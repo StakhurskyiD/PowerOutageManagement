@@ -1,0 +1,33 @@
+<!-- src/app/components/admin-dashboard/admin-dashboard.component.html -->
+<div class="admin-dashboard">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <nav>
+        <ul>
+          <li (click)="navigateTo('addresses')" [class.active]="activeSection === 'addresses'">Addresses</li>
+          <li (click)="navigateTo('groups')" [class.active]="activeSection === 'groups'">Groups</li>
+          <li (click)="navigateTo('schedules')" [class.active]="activeSection === 'schedules'">Schedules</li>
+        </ul>
+      </nav>
+    </aside>
+  
+    <!-- Main Content -->
+    <main class="dashboard-content">
+      <section *ngIf="activeSection === 'addresses'">
+        <h2>Manage Addresses</h2>
+        <app-address-form></app-address-form>
+
+      </section>
+  
+      <section *ngIf="activeSection === 'groups'">
+        <h2>Manage Groups</h2>
+        <group-form> </group-form>
+        <!-- Content for managing Groups -->
+      </section>
+  
+      <section *ngIf="activeSection === 'schedules'">
+        <h2>Manage Schedules</h2>
+        <!-- Content for managing Schedules -->
+      </section>
+    </main>
+  </div>

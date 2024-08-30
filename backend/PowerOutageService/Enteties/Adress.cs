@@ -1,8 +1,10 @@
+using PowerOutageService.Enteties.Contracts;
+
 namespace PowerOutageService.Enteties;
 
-public class Address
+public class Address: IEntity
 {
-    public int Id { get; set; }
-    public string AddressText { get; set; }
-    public int GroupId { get; set; } // Foreign key
+    public Guid Id { get; set; }
+    public string AddressName { get; set; }
+    public Guid GroupId { get; set; } // Foreign key
 }

@@ -1,0 +1,65 @@
+/* src/app/components/header/header.component.scss */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #e6e6e6;
+  
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+  
+      i.bulb-icon {
+        font-size: 1.8rem; // Adjust icon size
+        color: #2e7d32; // Set icon color
+        margin-right: 0.5rem; // Spacing between icon and text
+      }
+  
+      a {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.3s;
+  
+        &:hover {
+          color: #2e7d32;
+        }
+      }
+    }
+  
+    .navbar-menu {
+      display: flex;
+  
+      .navbar-item {
+        font-size: 1.3rem;
+        color: #666;
+        text-decoration: none;
+        padding: 0.5rem 0;
+        position: relative;
+        cursor: pointer;
+        margin-right: 2rem;
+        transition: color 0.3s, transform 0.3s;
+  
+        &:last-child {
+          margin-right: 0;
+        }
+  
+        &:hover {
+          color: #2e7d32;
+          transform: translateY(-2px);
+        }
+  
+        &.active {
+          color: #2e7d32;
+          border-bottom: 2px solid #2e7d32;
+          font-weight: 600;
+        }
+      }
+    }
+  }

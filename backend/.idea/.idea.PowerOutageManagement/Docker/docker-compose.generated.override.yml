@@ -1,0 +1,67 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  ef:
+    build:
+      context: "/Users/dstakhurskyi/RiderProjects/PowerOutageManagement"
+      dockerfile: "backend/PowerOutageService/Dockerfile"
+      target: "build"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/rider-debugger/linux-arm64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    - "--timeout=60"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
+      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
+    image: "poweroutageservice:dev"
+    ports:
+    - "127.0.0.1:57040:57100"
+    - "127.0.0.1:57240:57300"
+    volumes:
+    - "/Users/dstakhurskyi/.nuget/packages:/root/.nuget/packages"
+    - "/Users/dstakhurskyi/RiderProjects/PowerOutageManagement/backend/PowerOutageService:/app:rw"
+    - "/Users/dstakhurskyi/RiderProjects/PowerOutageManagement/backend:/src:rw"
+    - "/Users/dstakhurskyi/.local/share/JetBrains/RiderRemoteDebugger/2024.1.4/LinuxArm64:/opt/rider-debugger"
+    - "/Applications/Rider.app/Contents/bin:/etc/opt/rider-debugger/backend-log.xml"
+    - "/Users/dstakhurskyi/Library/Logs/JetBrains/Rider2024.1/DebuggerWorker/JetBrains.Debugger.Worker.2024_8_30_10_02_47:/var/opt/rider-debugger:rw"
+    working_dir: "/app"
+  power-outage-api:
+    build:
+      context: "/Users/dstakhurskyi/RiderProjects/PowerOutageManagement"
+      dockerfile: "backend/PowerOutageService/Dockerfile"
+      target: "build"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/rider-debugger/linux-arm64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    - "--timeout=60"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
+      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
+    image: "poweroutageservice:dev"
+    ports:
+    - "127.0.0.1:57041:57100"
+    - "127.0.0.1:57241:57300"
+    volumes:
+    - "/Users/dstakhurskyi/.nuget/packages:/root/.nuget/packages"
+    - "/Users/dstakhurskyi/RiderProjects/PowerOutageManagement/backend/PowerOutageService:/app:rw"
+    - "/Users/dstakhurskyi/RiderProjects/PowerOutageManagement/backend:/src:rw"
+    - "/Users/dstakhurskyi/.local/share/JetBrains/RiderRemoteDebugger/2024.1.4/LinuxArm64:/opt/rider-debugger"
+    - "/Applications/Rider.app/Contents/bin:/etc/opt/rider-debugger/backend-log.xml"
+    - "/Users/dstakhurskyi/Library/Logs/JetBrains/Rider2024.1/DebuggerWorker/JetBrains.Debugger.Worker.2024_8_30_10_02_47:/var/opt/rider-debugger:rw"
+    working_dir: "/app"

@@ -1,0 +1,14 @@
+<!-- src/app/components/header/header.component.html -->
+<nav class="navbar">
+    <div class="navbar-brand">
+      <!-- Add the bulb icon next to the brand name -->
+      <i class="fas fa-lightbulb bulb-icon"></i>
+      <a (click)="navigateTo('')" class="navbar-item">Power Outage Management</a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start">
+        <a (click)="navigateTo('main')" class="navbar-item">Main Page</a>
+        <a (click)="navigateTo('admin')" class="navbar-item">Admin Dashboard</a>
+      </div>
+    </div>
+  </nav>

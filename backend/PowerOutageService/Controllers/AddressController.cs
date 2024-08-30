@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using PowerOutageService.Enteties;
+using PowerOutageService.Services.Contracts;
 
 namespace PowerOutageService.Controllers
 {
@@ -10,26 +9,26 @@ namespace PowerOutageService.Controllers
     [ApiController]
     public class AddressController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAddressService _addressService;
 
-        public AddressController(AppDbContext context)
+        public AddressController(IAddressService addressService)
         {
-            _context = context;
+            _addressService = addressService;
         }
 
         // GET: api/Address
         [HttpGet]
         public async Task<IActionResult> GetAddresses()
         {
-            var addresses = await _context.Addresses.ToListAsync();
+            var addresses = await _addressService.GetAllAsync();
             return Ok(addresses);
         }
 
-        // GET: api/Address/5
+        // GET: api/Address/{id}
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAddress(int id)
+        public async Task<IActionResult> GetAddress(Guid id)
         {
-            var address = await _context.Addresses.FindAsync(id);
+            var address = await _addressService.GetByIdAsync(id);
 
             if (address == null)
             {
@@ -48,53 +47,37 @@ namespace PowerOutageService.Controllers
                 return BadRequest("Address is null.");
             }
 
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAddress), new { id = address.Id }, address);
+            var createdAddress = await _addressService.CreateAsync(address);
+            return CreatedAtAction(nameof(GetAddress), new { id = createdAddress.Id }, createdAddress);
         }
 
-        // PUT: api/Address/5
+        // PUT: api/Address/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAddress(int id, [FromBody] Address address)
+        public async Task<IActionResult> UpdateAddress(Guid id, [FromBody] Address address)
         {
             if (id != address.Id)
             {
                 return BadRequest("Address ID mismatch.");
             }
 
-            _context.Entry(address).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Addresses.Any(a => a.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/Address/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAddress(int id)
-        {
-            var address = await _context.Addresses.FindAsync(id);
-            if (address == null)
+            var updatedAddress = await _addressService.UpdateAsync(id, address);
+            if (updatedAddress == null)
             {
                 return NotFound();
             }
 
-            _context.Addresses.Remove(address);
-            await _context.SaveChangesAsync();
+            return Ok(updatedAddress);
+        }
+
+        // DELETE: api/Address/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAddress(Guid id)
+        {
+            var success = await _addressService.DeleteAsync(id);
+            if (!success)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

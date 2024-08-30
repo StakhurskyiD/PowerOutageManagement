@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using PowerOutageService.Enteties;
+using PowerOutageService.Services.Contracts;
 
 namespace PowerOutageService.Controllers
 {
@@ -8,26 +11,26 @@ namespace PowerOutageService.Controllers
     [ApiController]
     public class GroupController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IGroupService _groupService;
 
-        public GroupController(AppDbContext context)
+        public GroupController(IGroupService groupService)
         {
-            _context = context;
+            _groupService = groupService;
         }
 
         // GET: api/Group
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Group>>> GetGroups()
         {
-            var groups = await _context.Groups.ToListAsync();
+            var groups = await _groupService.GetAllAsync();
             return Ok(groups);
         }
 
-        // GET: api/Group/5
+        // GET: api/Group/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Group>> GetGroup(int id)
+        public async Task<ActionResult<Group>> GetGroup(Guid id)
         {
-            var group = await _context.Groups.FindAsync(id);
+            var group = await _groupService.GetByIdAsync(id);
 
             if (group == null)
             {
@@ -46,54 +49,37 @@ namespace PowerOutageService.Controllers
                 return BadRequest("Group is null.");
             }
 
-            _context.Groups.Add(group);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetGroup), new { id = group.Id }, group);
+            var createdGroup = await _groupService.CreateAsync(group);
+            return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id }, createdGroup);
         }
 
-        // PUT: api/Group/5
+        // PUT: api/Group/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGroup(int id, [FromBody] Group group)
+        public async Task<IActionResult> UpdateGroup(Guid id, [FromBody] Group group)
         {
             if (id != group.Id)
             {
                 return BadRequest("Group ID mismatch.");
             }
 
-            _context.Entry(group).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Groups.Any(g => g.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/Group/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroup(int id)
-        {
-            var group = await _context.Groups.FindAsync(id);
-            if (group == null)
+            var updatedGroup = await _groupService.UpdateAsync(id, group);
+            if (updatedGroup == null)
             {
                 return NotFound();
             }
 
-            _context.Groups.Remove(group);
-            await _context.SaveChangesAsync();
+            return Ok(updatedGroup);
+        }
+
+        // DELETE: api/Group/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGroup(Guid id)
+        {
+            var success = await _groupService.DeleteAsync(id);
+            if (!success)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }
