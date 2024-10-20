@@ -21,9 +21,11 @@ services:
       dockerfile: backend/PowerOutageService/Dockerfile
     container_name: power-outage-api
     ports:
-      - "5001:80"
+      - "5001:80"  # API port
+      - "57101-57200:57101-57200"  # Updated debug port range to avoid conflict
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=PowerOutageDB;Username=postgres;Password=YourStrong!Passw0rd;
     depends_on:
       - postgres

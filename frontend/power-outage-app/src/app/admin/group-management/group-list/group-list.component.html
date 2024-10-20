@@ -1,1 +1,13 @@
-<p>group-list works!</p>
+<div *ngIf="loading$ | async" class="loading">Loading groups...</div>
+<div *ngIf="error$ | async as error" class="error">{{ error }}</div> -->
+
+<!-- Minimalistic Table Display -->
+<div *ngIf="groups$ | async as groups" class="group-list-container">
+  <div *ngFor="let group of groups" class="group-card" (click)="onGroupSelected(group)">
+    <h3 class="group-title">{{ group.name }}</h3>
+    <p class="group-description">{{ group.description }}</p>
+  </div>
+</div>
+
+<!-- Refresh Button -->
+<button class="refresh-button" (click)="refreshList()">Refresh List</button> 
