@@ -39,8 +39,4 @@ export class GroupListComponent implements OnInit {
     console.log('Selected group:', group);
     // Handle group selection logic here, e.g., show details or navigate
   }
-
-  refreshList(): void {
-    this.fetchGroups(); // Refresh the groups list
-  }
 }

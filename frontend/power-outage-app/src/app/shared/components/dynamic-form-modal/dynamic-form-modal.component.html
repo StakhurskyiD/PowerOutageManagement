@@ -1,0 +1,89 @@
+<div class="overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>{{ title }}</h2>
+        <button class="close-button" (click)="onCancel()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div
+            class="form-group"
+            *ngFor="let field of fields"
+            [ngClass]="{ hidden: field.hidden }"
+          >
+            <label [for]="field.name">{{ field.label }}</label>
+  
+            <!-- Text Input -->
+            <input
+              *ngIf="field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number' || field.type === 'date'"
+              [id]="field.name"
+              [formControlName]="field.name"
+              [type]="field.type"
+              [placeholder]="field.placeholder"
+            />
+  
+            <!-- Textarea -->
+            <textarea
+              *ngIf="field.type === 'textarea'"
+              [id]="field.name"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder"
+            ></textarea>
+  
+            <!-- Select -->
+            <select
+              *ngIf="field.type === 'select'"
+              [id]="field.name"
+              [formControlName]="field.name"
+            >
+              <option *ngFor="let option of field.options" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+  
+            <!-- Checkbox -->
+            <div *ngIf="field.type === 'checkbox'">
+              <input
+                [id]="field.name"
+                type="checkbox"
+                [formControlName]="field.name"
+              />
+              <label [for]="field.name">{{ field.label }}</label>
+            </div>
+  
+            <!-- Radio Buttons -->
+            <div *ngIf="field.type === 'radio'">
+              <label>{{ field.label }}</label>
+              <div *ngFor="let option of field.options">
+                <input
+                  type="radio"
+                  [formControlName]="field.name"
+                  [value]="option.value"
+                  [id]="field.name + '_' + option.value"
+                />
+                <label [for]="field.name + '_' + option.value">
+                  {{ option.label }}
+                </label>
+              </div>
+            </div>
+  
+            <!-- Validation Errors -->
+            <div
+              *ngIf="
+                form.controls[field.name].invalid &&
+                form.controls[field.name].touched
+              "
+              class="error"
+            >
+              <!-- Custom function to display errors -->
+              {{ getErrorMessage(field.name) }}
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button (click)="onCancel()" class="btn cancel-button">Cancel</button>
+        <button (click)="onSubmit()" class="btn submit-button">Submit</button>
+      </div>
+    </div>
+  </div>
